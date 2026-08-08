@@ -1,0 +1,12 @@
+.venv/
+__pycache__/
+*.pyc
+
+data/*.epub
+
+output/
+*.wav
+*.mp3
+
+*.egg-info/
+.pytest_cache/
