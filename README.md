@@ -1,6 +1,6 @@
 # EPUB to Audiobook
 
-A simple local Python tool for converting EPUB books into audiobooks using the open-source Kokoro TTS engine.
+A simple local Python tool for converting EPUB and DOCX books into audiobooks using the open-source Kokoro TTS engine.
 
 ## How it works
 
@@ -18,17 +18,36 @@ WAV files
 FFmpeg
  ↓
 Audiobook MP3
+
+
+DOCX
+ ↓
+Text extraction
+ ↓
+Piper TTS
+ ↓
+WAV
+ ↓
+FFmpeg
+ ↓
+MP3 audiobook
+
 ```
 
 ## Features 
 
 EPUB chapter extraction
+DOCX text extraction
 HTML/text cleaning
-Local open-source TTS with Kokoro
+Local open-source text-to-speech
+Kokoro TTS for English
+Piper TTS for German
 English male voice (am_michael)
-Individual audio files per chapter
-FFmpeg audiobook assembly
-Resumable generation — existing chapters are skipped
+German voice (de_DE-thorsten-high)
+Individual audio files per EPUB chapter
+WAV to MP3 conversion for DOCX
+Resumable generation — existing audio files are skipped
+No cloud APIs required
 
 
 ## Requirements
@@ -36,44 +55,93 @@ Resumable generation — existing chapters are skipped
 Python 3.12+
 FFmpeg
 Kokoro TTS
+Piper TTS
 
 
 ## Installation
 
+Create and activate a virtual environment:
+
 python -m venv .venv
 .venv\Scripts\Activate.ps1
-pip install kokoro ebooklib beautifulsoup4 soundfile numpy tqdm
+
+Install the dependencies:
+
+pip install kokoro ebooklib beautifulsoup4 soundfile numpy tqdm python-docx piper-tts
 
 Make sure FFmpeg is installed:
 
 ffmpeg -version
+German voice
+
+Download the German Piper voice:
+
+python -m piper.download_voices de_DE-thorsten-high
+
+This downloads:
+
+de_DE-thorsten-high.onnx
+de_DE-thorsten-high.onnx.json
 
 
 ## Usage
 
-Place your EPUB file at:
+EPUB
+
+Place the EPUB file at:
 
 data/book.epub
 
 Then run:
 
-python src/audiobook.py
+python src/audiobook.py --input "data\book.epub"
 
 Generated chapter audio files are saved to:
 
 output/chapters/
 
-They can be combined into a single audiobook using FFmpeg.
 
-## Voice
+DOCX
 
-The project currently uses the Kokoro English male voice:
+Place the Word document in the data directory, for example:
+
+data/DE Text.docx
+
+Then run:
+
+python src/audiobook.py --input "data\DE Text.docx"
+
+The generated files are saved to:
+
+output/docx/
+
+For example:
+
+output/docx/
+├── DE Text.wav
+└── DE Text.mp3
+
+## Voices
+
+English
+
+Kokoro:
 
 am_michael
 
+
+German
+
+Piper:
+
+de_DE-thorsten-high
+
+
 ## Notes
 
-This project is intended for personal use with legally obtained EPUB files.
+This project is intended for personal use with legally obtained EPUB and DOCX files.
 
-Source EPUB files and generated audio are excluded from Git.
+Source books and generated audio are excluded from Git.
+
+
 
